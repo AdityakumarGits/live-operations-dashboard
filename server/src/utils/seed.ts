@@ -82,10 +82,27 @@ const seedDatabase = async () => {
     const customers = [];
 
     for (let i = 1; i <= 50; i++) {
+      let createdAt: Date;
+
+      // First 8 customers are new customers
+      // created within the last 7 days.
+      if (i <= 8) {
+        createdAt = new Date(
+          Date.now() - Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+        );
+      } else {
+        // Older customers
+        createdAt = new Date(
+          Date.now() - Math.floor(8 + Math.random() * 90) * 24 * 60 * 60 * 1000,
+        );
+      }
+
       customers.push({
         name: `Customer ${i}`,
         email: `customer${i}@example.com`,
         phone: `98765000${String(i).padStart(2, "0")}`,
+        createdAt,
+        updatedAt: createdAt,
       });
     }
 
@@ -103,19 +120,21 @@ const seedDatabase = async () => {
 
     for (let i = 1; i <= 100; i++) {
       const customer =
-        createdCustomers[
-          Math.floor(Math.random() * createdCustomers.length)
-        ];
+        createdCustomers[Math.floor(Math.random() * createdCustomers.length)];
 
       const brand = brands[Math.floor(Math.random() * brands.length)];
 
       vehicles.push({
         customerId: customer._id,
+
         registrationNumber: `DL${String(i).padStart(2, "0")}AB${String(
-          1000 + i
+          1000 + i,
         )}`,
+
         brand,
+
         model: "City",
+
         year: 2018 + Math.floor(Math.random() * 8),
       });
     }
@@ -133,8 +152,11 @@ const seedDatabase = async () => {
     for (let i = 1; i <= 20; i++) {
       mechanics.push({
         name: `Mechanic ${i}`,
+
         phone: `98111000${String(i).padStart(2, "0")}`,
+
         status: "AVAILABLE",
+
         jobsCompleted: Math.floor(Math.random() * 150),
       });
     }
@@ -158,48 +180,69 @@ const seedDatabase = async () => {
     const bookings = [];
 
     for (let i = 1; i <= 500; i++) {
-      // Pick a random vehicle
+      // Pick random vehicle
       const vehicle =
-        createdVehicles[
-          Math.floor(Math.random() * createdVehicles.length)
-        ];
+        createdVehicles[Math.floor(Math.random() * createdVehicles.length)];
 
-      // Find vehicle's customer
+      // Find vehicle customer
       const customer = createdCustomers.find(
-        (customer) =>
-          customer._id.toString() === vehicle.customerId.toString()
+        (customer) => customer._id.toString() === vehicle.customerId.toString(),
       );
 
-      // Make sure customer exists
       if (!customer) {
         throw new Error("Customer not found for vehicle");
       }
 
-      // Pick a random service
-      const service =
-        services[Math.floor(Math.random() * services.length)];
+      // Pick random service
+      const service = services[Math.floor(Math.random() * services.length)];
 
-      // Pick a random status
-      const status =
-        statuses[Math.floor(Math.random() * statuses.length)];
+      // Pick random status
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
 
       let mechanicId = undefined;
 
-      // Assign mechanic if booking is not pending/cancelled
+      // Assign mechanic if booking is not
+      // pending or cancelled
       if (status !== "PENDING" && status !== "CANCELLED") {
         const mechanic =
-          createdMechanics[
-            Math.floor(Math.random() * createdMechanics.length)
-          ];
+          createdMechanics[Math.floor(Math.random() * createdMechanics.length)];
 
         mechanicId = mechanic._id;
       }
 
+      // -------------------------
+      // Booking Date
+      // -------------------------
+
+      let scheduledAt: Date;
+
+      // First 30 bookings are scheduled today.
+      if (i <= 30) {
+        const today = new Date();
+
+        today.setHours(
+          9 + Math.floor(Math.random() * 10),
+          Math.floor(Math.random() * 60),
+          0,
+          0,
+        );
+
+        scheduledAt = today;
+      } else {
+        // Remaining bookings are distributed
+        // across the previous 30 days.
+        scheduledAt = new Date(
+          Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000,
+        );
+      }
+
       bookings.push({
-        bookingNumber: `BK-${String(1000 + i)}`,
+        bookingNumber: `BK-${1000 + i}`,
 
         customerId: customer._id,
+
         vehicleId: vehicle._id,
+
         serviceId: service._id,
 
         mechanicId,
@@ -208,14 +251,7 @@ const seedDatabase = async () => {
 
         amount: service.basePrice,
 
-        scheduledAt: new Date(
-          Date.now() -
-            Math.floor(Math.random() * 30) *
-              24 *
-              60 *
-              60 *
-              1000
-        ),
+        scheduledAt,
       });
     }
 

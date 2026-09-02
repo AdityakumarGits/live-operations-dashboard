@@ -4,8 +4,9 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Bookings from "./pages/Bookings";
 import Mechanics from "./pages/Mechanics";
-import Customers from "./components/Customers";
+import Customers from "./pages/Customers";
 import BookingDetail from "./pages/BookingDetail";
+import Analytics from "./pages/Analytics";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/mechanics" element={<Mechanics />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/bookings/:id" element={<BookingDetail />} />
+          <Route path="/analytics" element={<Analytics />} />
         </Route>
       </Routes>
     </BrowserRouter>

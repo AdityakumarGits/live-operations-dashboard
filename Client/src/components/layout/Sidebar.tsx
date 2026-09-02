@@ -38,7 +38,7 @@ const menuItems = [
 
 const Sidebar = () => {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r bg-white">
+    <aside className="fixed left-0 top-0 z-20 hidden h-screen w-64 border-r bg-white md:block">
       {/* Logo */}
       <div className="flex h-16 items-center border-b px-6">
         <h1 className="text-xl font-bold text-gray-900">
