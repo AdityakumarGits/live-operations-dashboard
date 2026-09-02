@@ -6,9 +6,11 @@ The dashboard is designed for an operations team to monitor bookings, mechanics,
 
 🌐 Live Demo
 
-Frontend: https://live-operations-dashboard-delta.vercel.app/
+Frontend: https://live-operations-dashboard-rcbuyhzi6-adityakumar-s-project.vercel.app/
 
-Backend: https://avatar-static-greg-transactions.trycloudflare.com
+Bookings: https://live-operations-dashboard-rcbuyhzi6-adityakumar-s-project.vercel.app/bookings
+
+Backend: https://live-operations-dashboard-1.onrender.com
 
 GitHub: https://github.com/AdityakumarGits/live-operations-dashboard
 
@@ -101,11 +103,11 @@ The application uses Server-Sent Events (SSE) for live booking updates.
 Example:
 
 PENDING
-   ↓
+↓
 ASSIGNED
-   ↓
+↓
 ON_THE_WAY
-   ↓
+↓
 COMPLETED
 
 When a booking status changes, connected dashboard clients receive the update without requiring a complete page reload.
@@ -158,9 +160,9 @@ Deployment
 
 Frontend: Vercel
 
-Backend: AWS EC2
+Backend: Render
 
-HTTPS bridge for demo: Cloudflare Quick Tunnel
+Database: MongoDB Atlas
 
 Source Code: GitHub
 
@@ -170,10 +172,10 @@ Source Code: GitHub
 │       React Frontend        │
 │  Vite + TypeScript + Tailwind│
 └──────────────┬──────────────┘
-               │
-               │ REST API
-               │ Axios
-               ▼
+│
+│ REST API
+│ Axios
+▼
 ┌─────────────────────────────┐
 │     Node.js + Express API   │
 │         TypeScript          │
@@ -183,9 +185,9 @@ Source Code: GitHub
 │ Validation                  │
 │ SSE                         │
 └──────────────┬──────────────┘
-               │
-               │ Mongoose
-               ▼
+│
+│ Mongoose
+▼
 ┌─────────────────────────────┐
 │        MongoDB Atlas        │
 │                             │
@@ -199,31 +201,31 @@ Source Code: GitHub
 Request Flow
 
 User
-  ↓
+↓
 React UI
-  ↓
+↓
 Axios
-  ↓
+↓
 Express API
-  ↓
+↓
 Controller
-  ↓
+↓
 Service Layer
-  ↓
+↓
 Mongoose
-  ↓
+↓
 MongoDB Atlas
 
 For live updates:
 
 Booking Status Update
-        ↓
+↓
 Backend
-        ↓
+↓
 SSE Broadcast
-        ↓
+↓
 Connected Frontend Clients
-        ↓
+↓
 Dashboard Refresh
 
 📁 Project Structure
@@ -360,18 +362,18 @@ GET /api/bookings?status=PENDING&page=1&limit=10
 
 Get Booking
 
-GET /api/bookings/:id
+GET /api/bookings/
 
 Returns detailed information about a booking.
 
 Update Booking Status
 
-PATCH /api/bookings/:id/status
+PATCH /api/bookings//status
 
 Request body:
 
 {
-  "status": "COMPLETED"
+"status": "COMPLETED"
 }
 
 Supported statuses:
@@ -430,18 +432,18 @@ VITE_API_URL=http://localhost:5000/api
 
 For the deployed frontend:
 
-VITE_API_URL=https://your-backend-url/api
+VITE_API_URL=https://live-operations-dashboard-1.onrender.com/api
 
 Never commit .env files or database credentials to GitHub.
 
 🚀 Local Setup
 
-1. Clone the repository
+Clone the repository
 
 git clone https://github.com/AdityakumarGits/live-operations-dashboard.git
 cd live-operations-dashboard
 
-2. Backend Setup
+Backend Setup
 
 cd server
 npm install
@@ -464,7 +466,7 @@ For development:
 
 npm run dev
 
-3. Seed Database
+Seed Database
 
 From the server directory:
 
@@ -472,7 +474,7 @@ npm run seed
 
 This creates the sample customers, vehicles, mechanics, services, and bookings.
 
-4. Frontend Setup
+Frontend Setup
 
 Open another terminal:
 
@@ -519,7 +521,7 @@ The React/Vite frontend is deployed on Vercel.
 
 Production URL:
 
-https://live-operations-dashboard-delta.vercel.app/
+https://live-operations-dashboard-rcbuyhzi6-adityakumar-s-project.vercel.app/
 
 The Vercel project uses:
 
@@ -531,18 +533,13 @@ The frontend receives the backend URL through:
 
 VITE_API_URL
 
-Backend — AWS EC2
+Backend — Render
 
-The Node.js/Express backend is deployed on an AWS EC2 Ubuntu instance.
-
-The backend runs as a production process using PM2.
-
-pm2 start
-pm2 save
+The Node.js/Express backend is deployed on Render.
 
 MongoDB Atlas is used as the production database.
 
-For the current demo, Cloudflare Quick Tunnel provides HTTPS access to the EC2 backend.
+The production backend is publicly accessible through Render over HTTPS.
 
 🧪 Error & UX Handling
 
@@ -732,9 +729,9 @@ Vercel deployment
 
 ✅
 
-AWS backend
+Render backend
 
-EC2
+Render
 
 GitHub repository
 
@@ -766,7 +763,7 @@ Booking detail and status management
 
 Analytics
 
-AWS deployment
+Render deployment
 
 Vercel deployment
 
