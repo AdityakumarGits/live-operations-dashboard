@@ -5,15 +5,21 @@ import {
   getBookingsList,
   updateBookingStatus,
 } from "../services/booking.service";
-
+import { sendUpdate } from "../services/sse.service";
 const bookingStatusSchema = z.object({
-  status: z.enum(["PENDING", "ASSIGNED", "ON_THE_WAY", "COMPLETED", "CANCELLED"]),
+  status: z.enum([
+    "PENDING",
+    "ASSIGNED",
+    "ON_THE_WAY",
+    "COMPLETED",
+    "CANCELLED",
+  ]),
 });
 
 export const getBookings = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const result = await getBookingsList(req.query);
@@ -36,7 +42,7 @@ export const getBookings = async (
 export const getBookingById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const bookingId = typeof req.params.id === "string" ? req.params.id : "";
@@ -62,7 +68,7 @@ export const getBookingById = async (
 export const patchBookingStatus = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const result = bookingStatusSchema.safeParse(req.body);
@@ -76,15 +82,24 @@ export const patchBookingStatus = async (
     }
 
     const bookingId = typeof req.params.id === "string" ? req.params.id : "";
-    const booking = await updateBookingStatus(bookingId, result.data.status);
+  const booking = await updateBookingStatus(
+  bookingId,
+  result.data.status
+);
 
-    if (!booking) {
-      res.status(404).json({
-        success: false,
-        message: "Booking not found",
-      });
-      return;
-    }
+if (!booking) {
+  res.status(404).json({
+    success: false,
+    message: "Booking not found",
+  });
+  return;
+}
+
+sendUpdate({
+  type: "BOOKING_STATUS_UPDATED",
+  bookingId: booking._id,
+  status: booking.status,
+});
 
     res.status(200).json({
       success: true,

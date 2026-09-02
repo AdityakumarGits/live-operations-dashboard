@@ -12,6 +12,7 @@ import bookingRoutes from "./routes/booking.routes";
 import mechanicRoutes from "./routes/mechanic.routes";
 import customerRoutes from "./routes/customer.routes";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
+import sseRoutes from "./routes/sse.routes";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/mechanics", mechanicRoutes);
 app.use("/api/customers", customerRoutes);
+app.use("/api", sseRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

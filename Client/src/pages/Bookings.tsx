@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   Search,
   ChevronLeft,
@@ -6,7 +7,9 @@ import {
 } from "lucide-react";
 
 import api from "../services/api";
+
 import type { Booking } from "../types";
+
 import BookingTable from "../components/dashboard/BookingTable";
 
 const Bookings = () => {
@@ -14,6 +17,10 @@ const Bookings = () => {
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+
+  // Sorting
+  const [sortBy, setSortBy] = useState("scheduledAt");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -23,6 +30,7 @@ const Bookings = () => {
 
   const limit = 10;
 
+  // Fetch bookings
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -35,13 +43,15 @@ const Bookings = () => {
             limit,
             search: search || undefined,
             status: status || undefined,
-            sortBy: "scheduledAt",
-            sortOrder: "desc",
+            sortBy,
+            sortOrder,
           },
         });
 
         setBookings(response.data.data);
-        setTotalPages(response.data.pagination.totalPages);
+        setTotalPages(
+          response.data.pagination.totalPages
+        );
       } catch (error) {
         console.error(error);
         setError("Failed to load bookings.");
@@ -51,7 +61,13 @@ const Bookings = () => {
     };
 
     fetchBookings();
-  }, [page, search, status]);
+  }, [
+    page,
+    search,
+    status,
+    sortBy,
+    sortOrder,
+  ]);
 
   // Search handler
   const handleSearch = (
@@ -66,6 +82,22 @@ const Bookings = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setStatus(event.target.value);
+    setPage(1);
+  };
+
+  // Sort field handler
+  const handleSortByChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSortBy(event.target.value);
+    setPage(1);
+  };
+
+  // Sort order handler
+  const handleSortOrderChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSortOrder(event.target.value);
     setPage(1);
   };
 
@@ -106,7 +138,9 @@ const Bookings = () => {
           onChange={handleStatusChange}
           className="rounded-lg border px-4 py-2.5 text-sm outline-none focus:border-blue-500"
         >
-          <option value="">All Statuses</option>
+          <option value="">
+            All Statuses
+          </option>
 
           <option value="PENDING">
             Pending
@@ -126,6 +160,36 @@ const Bookings = () => {
 
           <option value="CANCELLED">
             Cancelled
+          </option>
+        </select>
+
+        {/* Sort By */}
+        <select
+          value={sortBy}
+          onChange={handleSortByChange}
+          className="rounded-lg border px-4 py-2.5 text-sm outline-none focus:border-blue-500"
+        >
+          <option value="scheduledAt">
+            Sort by Date
+          </option>
+
+          <option value="amount">
+            Sort by Amount
+          </option>
+        </select>
+
+        {/* Sort Order */}
+        <select
+          value={sortOrder}
+          onChange={handleSortOrderChange}
+          className="rounded-lg border px-4 py-2.5 text-sm outline-none focus:border-blue-500"
+        >
+          <option value="desc">
+            Descending
+          </option>
+
+          <option value="asc">
+            Ascending
           </option>
         </select>
       </div>
