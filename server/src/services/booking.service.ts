@@ -7,7 +7,7 @@ import "../models/Mechanic";
 const ALLOWED_STATUS = [
   "PENDING",
   "ASSIGNED",
-  "ON_THE_WAY",
+  "ON_THE_WAY",     
   "COMPLETED",
   "CANCELLED",
 ] as const;
